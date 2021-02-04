@@ -29,9 +29,9 @@ public class OrderDAO implements Dao<Order> {
 	}
 
 	/**
-	 * Reads all customers from the database
+	 * Reads all orders from the database
 	 * 
-	 * @return A list of customers
+	 * @return A list of orders
 	 */
 	@Override
 	public List<Order> readAll() {
@@ -66,7 +66,7 @@ public class OrderDAO implements Dao<Order> {
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				Statement statement = connection.createStatement();
 				ResultSet resultSet = statement.executeQuery(
-						"SELECT orders.id, orders.customer_id, order_item.item_id FROM orders JOIN order_item ON orders.id = order_item.order_id WHERE orders.id = (SELECT id FROM orders ORDER BY id DESC LIMIT 1)");) {
+						"SELECT orders.id, orders.customer_id, order_item.item_id FROM orders LEFT JOIN order_item ON orders.id = order_item.order_id WHERE orders.id = (SELECT id FROM orders ORDER BY id DESC LIMIT 1)");) {
 			List<Order> orders = new ArrayList<>();
 			while (resultSet.next()) {
 				orders.add(modelFromResultSet(resultSet));
@@ -94,23 +94,38 @@ public class OrderDAO implements Dao<Order> {
 	}
 
 	/**
-	 * Creates a customer in the database
+	 * Creates a order in the database
 	 * 
-	 * @param customer - takes in a customer object. id will be ignored
+	 * @param order - takes in an order object. id will be ignored
 	 */
 	@Override
 	public Order create(Order order) {
-//		try (Connection connection = DBUtils.getInstance().getConnection();
-//				PreparedStatement statement = connection
-//						.prepareStatement("INSERT INTO customers(first_name, surname) VALUES (?, ?)");) {
-//			statement.setString(1, customer.getFirstName());
-//			statement.setString(2, customer.getSurname());
-//			statement.executeUpdate();
-//			return readLatest();
-//		} catch (Exception e) {
-//			LOGGER.debug(e);
-//			LOGGER.error(e.getMessage());
-//		}
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				PreparedStatement statement = connection
+						.prepareStatement("INSERT INTO orders(customer_id) VALUES (?)");) {
+			statement.setLong(1, order.getCustomerId());
+			statement.executeUpdate();	
+		} catch (Exception e) {
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+		}
+		Long newOrderId = readLatest().getId();
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				PreparedStatement statement = connection
+						.prepareStatement("INSERT INTO order_item(order_id, item_id) VALUES (?, ?)");) {
+				connection.setAutoCommit(false);
+				for (Long l : order.getItemId()) {
+					statement.setLong(1, newOrderId);
+					statement.setLong(2, l);
+					statement.addBatch();
+				}
+				connection.commit();
+				return readLatest();
+		} catch (Exception e) {
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+		}
+		
 		return null;
 	}
 
