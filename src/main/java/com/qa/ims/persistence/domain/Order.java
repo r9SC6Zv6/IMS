@@ -12,6 +12,7 @@ public class Order {
 	private List<Long> itemId;
 	private CustomerDAO customerDAO = new CustomerDAO();
 	private ItemDAO itemDAO = new ItemDAO();
+	private String update;
 
 	public Order(Long customerId, List<Long> itemId) {
 		this.setCustomerId(customerId);
@@ -22,6 +23,12 @@ public class Order {
 		this.setId(id);
 		this.setCustomerId(customerId);
 		this.setItemId(itemId);
+	}
+	
+	public Order(String update, Long id, List<Long> itemId) {
+		this.setId(id);
+		this.setItemId(itemId);
+		this.setUpdate(update);
 	}
 
 	public Long getId() {
@@ -46,6 +53,14 @@ public class Order {
 
 	public void setItemId(List<Long> itemId) {
 		this.itemId = itemId;
+	}
+	
+	public String getUpdate() {
+		return update;
+	}
+	
+	public void setUpdate(String update) {
+		this.update = update;
 	}
 
 	private String itemsToString(List<Long> itemId) {

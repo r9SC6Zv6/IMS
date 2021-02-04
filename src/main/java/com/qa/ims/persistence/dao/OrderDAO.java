@@ -104,7 +104,7 @@ public class OrderDAO implements Dao<Order> {
 				PreparedStatement statement = connection
 						.prepareStatement("INSERT INTO orders(customer_id) VALUES (?)");) {
 			statement.setLong(1, order.getCustomerId());
-			statement.executeUpdate();	
+			statement.executeUpdate();
 		} catch (Exception e) {
 			LOGGER.debug(e);
 			LOGGER.error(e.getMessage());
@@ -113,77 +113,126 @@ public class OrderDAO implements Dao<Order> {
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				PreparedStatement statement = connection
 						.prepareStatement("INSERT INTO order_item(order_id, item_id) VALUES (?, ?)");) {
-				connection.setAutoCommit(false);
-				for (Long l : order.getItemId()) {
-					statement.setLong(1, newOrderId);
-					statement.setLong(2, l);
-					statement.addBatch();
-				}
-				connection.commit();
-				return readLatest();
+			connection.setAutoCommit(false);
+			for (Long l : order.getItemId()) {
+				statement.setLong(1, newOrderId);
+				statement.setLong(2, l);
+				statement.addBatch();
+			}
+			connection.commit();
+			return readLatest();
 		} catch (Exception e) {
 			LOGGER.debug(e);
 			LOGGER.error(e.getMessage());
 		}
-		
+
 		return null;
 	}
 
 	@Override
 	public Order read(Long id) {
-//		try (Connection connection = DBUtils.getInstance().getConnection();
-//				PreparedStatement statement = connection.prepareStatement("SELECT * FROM customers WHERE id = ?");) {
-//			statement.setLong(1, id);
-//			try (ResultSet resultSet = statement.executeQuery();) {
-//				resultSet.next();
-//				return modelFromResultSet(resultSet);
-//			}
-//		} catch (Exception e) {
-//			LOGGER.debug(e);
-//			LOGGER.error(e.getMessage());
-//		}
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				PreparedStatement statement = connection.prepareStatement(
+						"SELECT orders.id, orders.customer_id, order_item.item_id FROM orders LEFT JOIN order_item ON orders.id = order_item.order_id WHERE orders.id = ?");) {
+			statement.setLong(1, id);
+			try (ResultSet resultSet = statement.executeQuery();) {
+				List<Order> orders = new ArrayList<>();
+				while (resultSet.next()) {
+					orders.add(modelFromResultSet(resultSet));
+				}
+				Long currentOrderId = orders.get(0).getId();
+				int i = 1;
+				while (i < orders.size()) {
+					if (orders.get(i).getId() == currentOrderId) {
+						orders.get(i - 1).getItemId().add(orders.get(i).getItemId().get(0));
+						orders.remove(i);
+					} else {
+						currentOrderId = orders.get(i).getId();
+						i++;
+					}
+				}
+				for (int j = 1; j < orders.size(); j++) {
+					orders.get(0).getItemId().add(orders.get(j).getItemId().get(0));
+				}
+				return orders.get(0);
+			}
+		} catch (Exception e) {
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+		}
 		return null;
 	}
 
 	/**
-	 * Updates a customer in the database
+	 * Updates an order in the database
 	 * 
-	 * @param customer - takes in a customer object, the id field will be used to
-	 *                 update that customer in the database
+	 * @param order - takes in an order object, the id field will be used to update
+	 *              that order in the database
 	 * @return
 	 */
 	@Override
 	public Order update(Order order) {
-//		try (Connection connection = DBUtils.getInstance().getConnection();
-//				PreparedStatement statement = connection
-//						.prepareStatement("UPDATE customers SET first_name = ?, surname = ? WHERE id = ?");) {
-//			statement.setString(1, customer.getFirstName());
-//			statement.setString(2, customer.getSurname());
-//			statement.setLong(3, customer.getId());
-//			statement.executeUpdate();
-//			return read(customer.getId());
-//		} catch (Exception e) {
-//			LOGGER.debug(e);
-//			LOGGER.error(e.getMessage());
-//		}
+		if (order.getUpdate().equals("ADD")) {
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				PreparedStatement statement = connection
+						.prepareStatement("INSERT INTO order_item(order_id, item_id) VALUES (?, ?)");) {
+			connection.setAutoCommit(false);
+			for (Long l : order.getItemId()) {
+				statement.setLong(1, order.getId());
+				statement.setLong(2, l);
+				statement.addBatch();
+			}
+			connection.commit();
+			return read(order.getId());
+		} catch (Exception e) {
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+		}
+		} else if (order.getUpdate().equals("REMOVE")){
+			
+			
+			
+			
+			
+			
+			
+		} else {
+			
+			
+			
+			
+			
+			
+			
+			
+		}
 		return null;
 	}
 
 	/**
-	 * Deletes a customer in the database
+	 * Deletes an order in the database
 	 * 
-	 * @param id - id of the customer
+	 * @param id - id of the order
 	 */
 	@Override
 	public int delete(long id) {
-//		try (Connection connection = DBUtils.getInstance().getConnection();
-//				PreparedStatement statement = connection.prepareStatement("DELETE FROM customers WHERE id = ?");) {
-//			statement.setLong(1, id);
-//			return statement.executeUpdate();
-//		} catch (Exception e) {
-//			LOGGER.debug(e);
-//			LOGGER.error(e.getMessage());
-//		}
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				PreparedStatement statement = connection.prepareStatement("DELETE FROM orders WHERE id = ?");) {
+			statement.setLong(1, id);
+			return statement.executeUpdate();
+		} catch (Exception e) {
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+		}
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				PreparedStatement statement = connection
+						.prepareStatement("DELETE FROM order_item WHERE order_id = ?");) {
+			statement.setLong(1, id);
+			return statement.executeUpdate();
+		} catch (Exception e) {
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+		}
 		return 0;
 	}
 
