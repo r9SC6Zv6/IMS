@@ -10,7 +10,7 @@ import com.qa.ims.persistence.domain.Order;
 import com.qa.ims.utils.Utils;
 
 /**
- * Takes in customer details for CRUD functionality
+ * Takes in order details for CRUD functionality
  *
  */
 public class OrderController implements CrudController<Order> {
@@ -27,7 +27,7 @@ public class OrderController implements CrudController<Order> {
 	}
 
 	/**
-	 * Reads all customers to the logger
+	 * Reads all orders to the logger
 	 */
 	@Override
 	public List<Order> readAll() {
@@ -39,46 +39,47 @@ public class OrderController implements CrudController<Order> {
 	}
 
 	/**
-	 * Creates a customer by taking in user input
+	 * Creates an order by taking in user input
 	 */
 	@Override
 	public Order create() {
-//		LOGGER.info("Please enter a first name");
-//		String firstName = utils.getString();
-//		LOGGER.info("Please enter a surname");
-//		String surname = utils.getString();
-//		Customer customer = customerDAO.create(new Customer(firstName, surname));
-//		LOGGER.info("Customer created");
-		return null;
+		LOGGER.info("Please enter a customer id");
+		Long customerId = utils.getLong();
+		LOGGER.info("Please enter item ids separated by space");
+		List<Long> itemId = utils.getLongList();
+		Order order = orderDAO.create(new Order(customerId, itemId));
+		LOGGER.info("Order created");
+		return order;
 	}
 
 	/**
-	 * Updates an existing customer by taking in user input
+	 * Updates an existing order by taking in user input
 	 */
 	@Override
 	public Order update() {
-//		LOGGER.info("Please enter the id of the customer you would like to update");
-//		Long id = utils.getLong();
-//		LOGGER.info("Please enter a first name");
-//		String firstName = utils.getString();
-//		LOGGER.info("Please enter a surname");
-//		String surname = utils.getString();
-//		Customer customer = customerDAO.update(new Customer(id, firstName, surname));
-		LOGGER.info("Customer Updated");
-		return null;
+		LOGGER.info("Please enter the id of the order you would like to update");
+		Long id = utils.getLong();
+		LOGGER.info("How would you like to update the order");
+		LOGGER.info("ADD: To add items to the order");
+		LOGGER.info("REMOVE: To remove items from the order");
+		String update = utils.getString();
+		LOGGER.info("Please enter item ids separated by space");
+		List<Long> itemId = utils.getLongList();
+		Order order = orderDAO.update(new Order(update, id, itemId));
+		LOGGER.info("Order Updated");
+		return order;
 	}
 
 	/**
-	 * Deletes an existing customer by the id of the customer
+	 * Deletes an existing order by the id of the order
 	 * 
 	 * @return
 	 */
 	@Override
 	public int delete() {
-//		LOGGER.info("Please enter the id of the customer you would like to delete");
-//		Long id = utils.getLong();
-//		return OrderDAO.delete(id);
-		return 0;
+		LOGGER.info("Please enter the id of the order you would like to delete");
+		Long id = utils.getLong();
+		return orderDAO.delete(id);
 	}
 
 }
