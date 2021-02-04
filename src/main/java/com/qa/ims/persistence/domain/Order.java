@@ -1,20 +1,27 @@
 package com.qa.ims.persistence.domain;
 
+import java.util.List;
+
+import com.qa.ims.persistence.dao.CustomerDAO;
+import com.qa.ims.persistence.dao.ItemDAO;
+
 public class Order {
 
 	private Long id;
-	private String firstName;
-	private String surname;
+	private Long customerId;
+	private List<Long> itemId;
+	private CustomerDAO customerDAO = new CustomerDAO();
+	private ItemDAO itemDAO = new ItemDAO();
 
-	public Order(String firstName, String surname) {
-		this.setFirstName(firstName);
-		this.setSurname(surname);
+	public Order(Long customerId, List<Long> itemId) {
+		this.setCustomerId(customerId);
+		this.setItemId(itemId);
 	}
 
-	public Order(Long id, String firstName, String surname) {
+	public Order(Long id, Long customerId, List<Long> itemId) {
 		this.setId(id);
-		this.setFirstName(firstName);
-		this.setSurname(surname);
+		this.setCustomerId(customerId);
+		this.setItemId(itemId);
 	}
 
 	public Long getId() {
@@ -25,34 +32,44 @@ public class Order {
 		this.id = id;
 	}
 
-	public String getFirstName() {
-		return firstName;
+	public Long getCustomerId() {
+		return customerId;
 	}
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
+	public void setCustomerId(Long customerId) {
+		this.customerId = customerId;
 	}
 
-	public String getSurname() {
-		return surname;
+	public List<Long> getItemId() {
+		return itemId;
 	}
 
-	public void setSurname(String surname) {
-		this.surname = surname;
+	public void setItemId(List<Long> itemId) {
+		this.itemId = itemId;
 	}
 
+	private String itemsToString(List<Long> itemId) {
+		String itemString = "";
+		for (Long id : itemId) {
+			itemString = itemString + "%n" + itemDAO.read(id).getName();
+		}
+		return itemString;
+	}
+	
 	@Override
 	public String toString() {
-		return "id:" + id + " first name:" + firstName + " surname:" + surname;
+		return "order id:" + id + " customer id:" + customerId 
+				+ " customer name:" + customerDAO.read(customerId).getFirstName() + " " + customerDAO.read(customerId).getSurname()
+				+ " items:" + itemsToString(itemId);
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((surname == null) ? 0 : surname.hashCode());
+		result = prime * result + ((customerId == null) ? 0 : customerId.hashCode());
+		result = prime * result + ((itemId == null) ? 0 : itemId.hashCode());
 		return result;
 	}
 
@@ -65,20 +82,20 @@ public class Order {
 		if (getClass() != obj.getClass())
 			return false;
 		Order other = (Order) obj;
-		if (getFirstName() == null) {
-			if (other.getFirstName() != null)
+		if (getCustomerId() == null) {
+			if (other.getCustomerId() != null)
 				return false;
-		} else if (!getFirstName().equals(other.getFirstName()))
+		} else if (!getCustomerId().equals(other.getCustomerId()))
 			return false;
 		if (id == null) {
 			if (other.id != null)
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
-		if (surname == null) {
-			if (other.surname != null)
+		if (itemId == null) {
+			if (other.itemId != null)
 				return false;
-		} else if (!surname.equals(other.surname))
+		} else if (!itemId.equals(other.itemId))
 			return false;
 		return true;
 	}
