@@ -1,5 +1,7 @@
 package com.qa.ims.utils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import org.apache.logging.log4j.LogManager;
@@ -50,6 +52,23 @@ public class Utils {
 			}
 		} while (doubleInput == null);
 		return doubleInput;
+	}
+	
+	public List<Long> getLongList() {
+		String input = null;
+		List<Long> listInput = new ArrayList<>();
+		do {
+			try {
+				input = getString();
+				String[] listInputString = input.split(" ");
+				for (String s : listInputString) {
+					listInput.add(Long.parseLong(s));
+				}
+			} catch (NumberFormatException nfe) {
+				LOGGER.info("Error - Please enter numbers separated by space");
+			}
+		} while (listInput.isEmpty());
+		return listInput;
 	}
 
 }
