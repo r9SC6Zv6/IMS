@@ -47,7 +47,7 @@ public class OrderDAO implements Dao<Order> {
 			int i = 1;
 			while (i < orders.size()) {
 				if (orders.get(i).getId() == currentOrderId) {
-					orders.get(i-1).getItemId().add(orders.get(i).getItemId().get(0));
+					orders.get(i - 1).getItemId().add(orders.get(i).getItemId().get(0));
 					orders.remove(i);
 				} else {
 					currentOrderId = orders.get(i).getId();
@@ -63,15 +63,33 @@ public class OrderDAO implements Dao<Order> {
 	}
 
 	public Order readLatest() {
-//		try (Connection connection = DBUtils.getInstance().getConnection();
-//				Statement statement = connection.createStatement();
-//				ResultSet resultSet = statement.executeQuery("SELECT * FROM customers ORDER BY id DESC LIMIT 1");) {
-//			resultSet.next();
-//			return modelFromResultSet(resultSet);
-//		} catch (Exception e) {
-//			LOGGER.debug(e);
-//			LOGGER.error(e.getMessage());
-//		}
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				Statement statement = connection.createStatement();
+				ResultSet resultSet = statement.executeQuery(
+						"SELECT orders.id, orders.customer_id, order_item.item_id FROM orders JOIN order_item ON orders.id = order_item.order_id WHERE orders.id = (SELECT id FROM orders ORDER BY id DESC LIMIT 1)");) {
+			List<Order> orders = new ArrayList<>();
+			while (resultSet.next()) {
+				orders.add(modelFromResultSet(resultSet));
+			}
+			Long currentOrderId = orders.get(0).getId();
+			int i = 1;
+			while (i < orders.size()) {
+				if (orders.get(i).getId() == currentOrderId) {
+					orders.get(i - 1).getItemId().add(orders.get(i).getItemId().get(0));
+					orders.remove(i);
+				} else {
+					currentOrderId = orders.get(i).getId();
+					i++;
+				}
+			}
+			for (int j = 1; j < orders.size(); j++) {
+				orders.get(0).getItemId().add(orders.get(j).getItemId().get(0));
+			}
+			return orders.get(0);
+		} catch (Exception e) {
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+		}
 		return null;
 	}
 
