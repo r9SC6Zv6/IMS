@@ -51,16 +51,15 @@ public class Order {
 	private String itemsToString(List<Long> itemId) {
 		String itemString = "";
 		for (Long id : itemId) {
-			itemString = itemString + "%n" + itemDAO.read(id).getName();
+			itemString = itemString + System.lineSeparator() + "  - " + itemDAO.read(id).getName();
 		}
 		return itemString;
 	}
-	
+
 	@Override
 	public String toString() {
-		return "order id:" + id + " customer id:" + customerId 
-				+ " customer name:" + customerDAO.read(customerId).getFirstName() + " " + customerDAO.read(customerId).getSurname()
-				+ " items:" + itemsToString(itemId);
+		return "order id:" + id + " customer name:" + customerDAO.read(customerId).getFirstName() + " "
+				+ customerDAO.read(customerId).getSurname() + " items:" + itemsToString(itemId);
 	}
 
 	@Override
