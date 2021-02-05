@@ -196,7 +196,6 @@ public class OrderDAO implements Dao<Order> {
 				LOGGER.error(e.getMessage());
 			}
 		} else if (order.getUpdate().equals("REMOVE")) {
-			LOGGER.info("im in else if");
 			try (Connection connection = DBUtils.getInstance().getConnection();
 					PreparedStatement statement = connection
 							.prepareStatement("DELETE FROM order_item WHERE order_id = ? AND item_id = ? LIMIT 1");) {
@@ -244,6 +243,27 @@ public class OrderDAO implements Dao<Order> {
 			LOGGER.error(e.getMessage());
 		}
 		return 0;
+	}
+
+	public float calculateCost(long id) {
+		Float cost = 0F;
+		Order order = read(id);
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				PreparedStatement statement = connection.prepareStatement("SELECT value FROM items WHERE id = ?");) {
+			for (Long itemId : order.getItemId()) {
+				statement.setLong(1, itemId);
+				try (ResultSet resultSet = statement.executeQuery();) {
+					while (resultSet.next()) {
+						cost = cost + (resultSet.getFloat(1));
+					}
+				}
+			}
+		} catch (Exception e) {
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+		}
+
+		return cost;
 	}
 
 }
