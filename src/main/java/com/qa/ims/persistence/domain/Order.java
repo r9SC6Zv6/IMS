@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.qa.ims.persistence.dao.CustomerDAO;
 import com.qa.ims.persistence.dao.ItemDAO;
+import com.qa.ims.persistence.dao.OrderDAO;
 
 public class Order {
 
@@ -12,6 +13,7 @@ public class Order {
 	private List<Long> itemId;
 	private CustomerDAO customerDAO = new CustomerDAO();
 	private ItemDAO itemDAO = new ItemDAO();
+	private OrderDAO orderDAO = new OrderDAO();
 	private String update;
 
 	public Order(Long customerId, List<Long> itemId) {
@@ -72,13 +74,14 @@ public class Order {
 		} else {
 			itemString = System.lineSeparator() + "  No items in this order";
 		}
+		itemString = itemString + System.lineSeparator();
 		return itemString;
 	}
 
 	@Override
 	public String toString() {
 		return "order id:" + id + " customer name:" + customerDAO.read(customerId).getFirstName() + " "
-				+ customerDAO.read(customerId).getSurname() + " items:" + itemsToString(itemId);
+				+ customerDAO.read(customerId).getSurname() + " items:" + itemsToString(itemId) + "total cost:" + orderDAO.calculateCost(id);
 	}
 
 	@Override
