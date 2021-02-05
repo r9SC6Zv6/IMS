@@ -11,20 +11,24 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.qa.ims.persistence.domain.Customer;
 import com.qa.ims.persistence.domain.Order;
 import com.qa.ims.utils.DBUtils;
 
 public class OrderDAO implements Dao<Order> {
 
 	public static final Logger LOGGER = LogManager.getLogger();
+	@SuppressWarnings("unused")
+	private Long nullCheck;
 
 	@Override
 	public Order modelFromResultSet(ResultSet resultSet) throws SQLException {
 		Long id = resultSet.getLong("id");
 		Long customerId = resultSet.getLong("customer_id");
 		List<Long> itemId = new ArrayList<>();
-		itemId.add(resultSet.getLong("item_id"));
+		nullCheck = resultSet.getLong("item_id");
+		if (!resultSet.wasNull()) {
+			itemId.add(resultSet.getLong("item_id"));
+		}
 		return new Order(id, customerId, itemId);
 	}
 
@@ -38,7 +42,7 @@ public class OrderDAO implements Dao<Order> {
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				Statement statement = connection.createStatement();
 				ResultSet resultSet = statement.executeQuery(
-						"SELECT orders.id, orders.customer_id, order_item.item_id FROM orders JOIN order_item ON orders.id = order_item.order_id ORDER BY orders.id ASC");) {
+						"SELECT orders.id, orders.customer_id, order_item.item_id FROM orders LEFT JOIN order_item ON orders.id = order_item.order_id ORDER BY orders.id ASC");) {
 			List<Order> orders = new ArrayList<>();
 			while (resultSet.next()) {
 				orders.add(modelFromResultSet(resultSet));
@@ -110,6 +114,7 @@ public class OrderDAO implements Dao<Order> {
 			LOGGER.error(e.getMessage());
 		}
 		Long newOrderId = readLatest().getId();
+		LOGGER.info(newOrderId);
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				PreparedStatement statement = connection
 						.prepareStatement("INSERT INTO order_item(order_id, item_id) VALUES (?, ?)");) {
@@ -119,6 +124,7 @@ public class OrderDAO implements Dao<Order> {
 				statement.setLong(2, l);
 				statement.addBatch();
 			}
+			statement.executeBatch();
 			connection.commit();
 			return readLatest();
 		} catch (Exception e) {
@@ -173,38 +179,42 @@ public class OrderDAO implements Dao<Order> {
 	@Override
 	public Order update(Order order) {
 		if (order.getUpdate().equals("ADD")) {
-		try (Connection connection = DBUtils.getInstance().getConnection();
-				PreparedStatement statement = connection
-						.prepareStatement("INSERT INTO order_item(order_id, item_id) VALUES (?, ?)");) {
-			connection.setAutoCommit(false);
-			for (Long l : order.getItemId()) {
-				statement.setLong(1, order.getId());
-				statement.setLong(2, l);
-				statement.addBatch();
+			try (Connection connection = DBUtils.getInstance().getConnection();
+					PreparedStatement statement = connection
+							.prepareStatement("INSERT INTO order_item(order_id, item_id) VALUES (?, ?)");) {
+				connection.setAutoCommit(false);
+				for (Long l : order.getItemId()) {
+					statement.setLong(1, order.getId());
+					statement.setLong(2, l);
+					statement.addBatch();
+				}
+				statement.executeBatch();
+				connection.commit();
+				return read(order.getId());
+			} catch (Exception e) {
+				LOGGER.debug(e);
+				LOGGER.error(e.getMessage());
 			}
-			connection.commit();
-			return read(order.getId());
-		} catch (Exception e) {
-			LOGGER.debug(e);
-			LOGGER.error(e.getMessage());
-		}
-		} else if (order.getUpdate().equals("REMOVE")){
-			
-			
-			
-			
-			
-			
-			
+		} else if (order.getUpdate().equals("REMOVE")) {
+			LOGGER.info("im in else if");
+			try (Connection connection = DBUtils.getInstance().getConnection();
+					PreparedStatement statement = connection
+							.prepareStatement("DELETE FROM order_item WHERE order_id = ? AND item_id = ? LIMIT 1");) {
+				connection.setAutoCommit(false);
+				for (Long l : order.getItemId()) {
+					statement.setLong(1, order.getId());
+					statement.setLong(2, l);
+					statement.addBatch();
+				}
+				statement.executeBatch();
+				connection.commit();
+				return read(order.getId());
+			} catch (Exception e) {
+				LOGGER.debug(e);
+				LOGGER.error(e.getMessage());
+			}
 		} else {
-			
-			
-			
-			
-			
-			
-			
-			
+			LOGGER.info("Wrong update action, please try again");
 		}
 		return null;
 	}

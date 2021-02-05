@@ -65,8 +65,12 @@ public class Order {
 
 	private String itemsToString(List<Long> itemId) {
 		String itemString = "";
+		if (!itemId.isEmpty()) {
 		for (Long id : itemId) {
 			itemString = itemString + System.lineSeparator() + "  - " + itemDAO.read(id).getName();
+		}
+		} else {
+			itemString = System.lineSeparator() + "  No items in this order";
 		}
 		return itemString;
 	}
