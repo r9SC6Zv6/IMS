@@ -168,6 +168,44 @@ public class OrderDAO implements Dao<Order> {
 		}
 		return null;
 	}
+	
+	public List<Long> readByCustomer(Long customerId) {
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				PreparedStatement statement = connection.prepareStatement(
+						"SELECT id FROM orders WHERE customer_id = ?");) {
+			statement.setLong(1, customerId);
+			try (ResultSet resultSet = statement.executeQuery();) {
+				List<Long> orderId = new ArrayList<>();
+				while (resultSet.next()) {
+					orderId.add(resultSet.getLong(1));
+				}
+				return orderId;
+			}
+		} catch (Exception e) {
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+		}
+		return null;
+	}
+	
+	public List<Long> readByItem(Long itemId) {
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				PreparedStatement statement = connection.prepareStatement(
+						"SELECT order_id FROM order_item WHERE item_id = ?");) {
+			statement.setLong(1, itemId);
+			try (ResultSet resultSet = statement.executeQuery();) {
+				List<Long> orderId = new ArrayList<>();
+				while (resultSet.next()) {
+					orderId.add(resultSet.getLong(1));
+				}
+				return orderId;
+			}
+		} catch (Exception e) {
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+		}
+		return null;
+	}
 
 	/**
 	 * Updates an order in the database

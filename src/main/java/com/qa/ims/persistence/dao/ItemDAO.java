@@ -17,6 +17,8 @@ import com.qa.ims.utils.DBUtils;
 public class ItemDAO implements Dao<Item> {
 
 	public static final Logger LOGGER = LogManager.getLogger();
+	
+	private OrderDAO orderDAO = new OrderDAO();
 
 	@Override
 	public Item modelFromResultSet(ResultSet resultSet) throws SQLException {
@@ -129,6 +131,14 @@ public class ItemDAO implements Dao<Item> {
 	 */
 	@Override
 	public int delete(long id) {
+		// Get a list of order ids for item
+		List<Long> orderId = new ArrayList<>();
+		orderId = orderDAO.readByItem(id);
+		// Delete all orders with item
+		for (Long l : orderId) {
+			orderDAO.delete(l);
+		}
+		// Delete item
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				PreparedStatement statement = connection.prepareStatement("DELETE FROM items WHERE id = ?");) {
 			statement.setLong(1, id);
