@@ -263,24 +263,25 @@ public class OrderDAO implements Dao<Order> {
 	 */
 	@Override
 	public int delete(long id) {
-		try (Connection connection = DBUtils.getInstance().getConnection();
-				PreparedStatement statement = connection.prepareStatement("DELETE FROM orders WHERE id = ?");) {
-			statement.setLong(1, id);
-			return statement.executeUpdate();
-		} catch (Exception e) {
-			LOGGER.debug(e);
-			LOGGER.error(e.getMessage());
-		}
+		int deleteCount = 0;
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				PreparedStatement statement = connection
 						.prepareStatement("DELETE FROM order_item WHERE order_id = ?");) {
 			statement.setLong(1, id);
-			return statement.executeUpdate();
+			deleteCount += statement.executeUpdate();
 		} catch (Exception e) {
 			LOGGER.debug(e);
 			LOGGER.error(e.getMessage());
 		}
-		return 0;
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				PreparedStatement statement = connection.prepareStatement("DELETE FROM orders WHERE id = ?");) {
+			statement.setLong(1, id);
+			deleteCount += statement.executeUpdate();
+		} catch (Exception e) {
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+		}
+		return deleteCount;
 	}
 
 	public float calculateCost(long id) {
