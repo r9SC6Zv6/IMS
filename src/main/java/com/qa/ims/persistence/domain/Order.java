@@ -11,9 +11,6 @@ public class Order {
 	private Long id;
 	private Long customerId;
 	private List<Long> itemId;
-	private CustomerDAO customerDAO = new CustomerDAO();
-	private ItemDAO itemDAO = new ItemDAO();
-	private OrderDAO orderDAO = new OrderDAO();
 	private String update;
 
 	public Order(Long customerId, List<Long> itemId) {
@@ -66,6 +63,7 @@ public class Order {
 	}
 
 	private String itemsToString(List<Long> itemId) {
+		ItemDAO itemDAO = new ItemDAO();
 		String itemString = "";
 		if (!itemId.isEmpty()) {
 		for (Long id : itemId) {
@@ -80,6 +78,8 @@ public class Order {
 
 	@Override
 	public String toString() {
+		CustomerDAO customerDAO = new CustomerDAO();
+		OrderDAO orderDAO = new OrderDAO();
 		return "order id:" + id + " customer name:" + customerDAO.read(customerId).getFirstName() + " "
 				+ customerDAO.read(customerId).getSurname() + " items:" + itemsToString(itemId) + "total cost:" + orderDAO.calculateCost(id);
 	}
@@ -91,6 +91,7 @@ public class Order {
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((customerId == null) ? 0 : customerId.hashCode());
 		result = prime * result + ((itemId == null) ? 0 : itemId.hashCode());
+		result = prime * result + ((update == null) ? 0 : update.hashCode());
 		return result;
 	}
 
@@ -117,6 +118,11 @@ public class Order {
 			if (other.itemId != null)
 				return false;
 		} else if (!itemId.equals(other.itemId))
+			return false;
+		if (update == null) {
+			if (other.update != null)
+				return false;
+		} else if (!update.equals(other.update))
 			return false;
 		return true;
 	}

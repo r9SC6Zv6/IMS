@@ -11,17 +11,17 @@ import org.junit.Test;
 import com.qa.ims.persistence.domain.Order;
 import com.qa.ims.utils.DBUtils;
 
-public class OrderDAOTest {
+public class OrderDAOExceptionsTest {
 	
 	private final OrderDAO DAO = new OrderDAO();
 	
 	@Before
 	public void setup() {
 		DBUtils.connect();
-		DBUtils.getInstance().init("src/test/resources/sql-schema.sql", "src/test/resources/sql-data.sql");
+		DBUtils.getInstance().init("src/test/resources/sql-schema-exceptions.sql");
 	}
 
-	@Test
+	@Test(expected = NullPointerException.class)
 	public void testCreate() {
 		final List<Long> itemId = new ArrayList<>();
 		itemId.add(1L);
@@ -29,17 +29,8 @@ public class OrderDAOTest {
 		final Order created = new Order(2L, 1L, itemId);
 		assertEquals(created, DAO.create(created));
 	}
-	
-	@Test
-	public void testCreateItemExpetion() {
-		final List<Long> itemId = new ArrayList<>();
-		itemId.add(1L);
-		itemId.add(3L);
-		final Order created = new Order(2L, 1L, itemId);
-		assertEquals(null, DAO.create(created));
-	}
 
-	@Test
+	@Test(expected = NullPointerException.class)
 	public void testReadAll() {
 		List<Order> expected = new ArrayList<>();
 		final List<Long> itemId = new ArrayList<>();
@@ -49,7 +40,7 @@ public class OrderDAOTest {
 		assertEquals(expected, DAO.readAll());
 	}
 
-	@Test
+	@Test(expected = NullPointerException.class)
 	public void testReadLatest() {
 		final List<Long> itemId = new ArrayList<>();
 		itemId.add(1L);
@@ -57,7 +48,7 @@ public class OrderDAOTest {
 		assertEquals(new Order(1L, 1L, itemId), DAO.readLatest());
 	}
 
-	@Test
+	@Test(expected = NullPointerException.class)
 	public void testRead() {
 		final List<Long> itemId = new ArrayList<>();
 		itemId.add(1L);
@@ -68,22 +59,17 @@ public class OrderDAOTest {
 	
 	@Test
 	public void testReadByCustomer() {
-		final List<Long> orderId = new ArrayList<>();
-		orderId.add(1L);
 		final long ID = 1L;
-		assertEquals(orderId, DAO.readByCustomer(ID));
+		assertEquals(null, DAO.readByCustomer(ID));
 	}
 	
 	@Test
 	public void testReadByItem() {
-		final List<Long> itemId = new ArrayList<>();
-		itemId.add(1L);
-		itemId.add(1L);
 		final long ID = 1L;
-		assertEquals(itemId, DAO.readByItem(ID));
+		assertEquals(null, DAO.readByItem(ID));
 	}
 
-	@Test
+	@Test(expected = NullPointerException.class)
 	public void testUpdateAdd() {
 		final List<Long> itemIdUpdater = new ArrayList<>();
 		itemIdUpdater.add(1L);
@@ -96,7 +82,7 @@ public class OrderDAOTest {
 		assertEquals(updated, DAO.update(updater));
 	}
 	
-	@Test
+	@Test(expected = NullPointerException.class)
 	public void testUpdateRemove() {
 		final List<Long> itemId = new ArrayList<>();
 		itemId.add(1L);
@@ -106,15 +92,24 @@ public class OrderDAOTest {
 		final Order updated = new Order(1L, 1L, itemId);
 		assertEquals(updated, DAO.update(updater));
 	}
+	
+	@Test
+	public void testUpdateException() {
+		final List<Long> itemId = new ArrayList<>();
+		itemId.add(1L);
+		itemId.add(1L);
+		final Order updater = new Order("ERROR", 1L, itemId);
+		DAO.update(updater);
+	}
 
 	@Test
 	public void testDelete() {
-		assertEquals(3, DAO.delete(1));
+		assertEquals(0, DAO.delete(1));
 	}
 	
 	@Test
 	public void testCalculator() {
 		final long ID = 1L;
-		assertEquals(6980000F, DAO.calculateCost(ID), 0.1);
+		assertEquals(0F, DAO.calculateCost(ID), 0.1);
 	}
 }
