@@ -67,7 +67,7 @@ public class Order {
 		String itemString = "";
 		if (!itemId.isEmpty()) {
 		for (Long id : itemId) {
-			itemString = itemString + System.lineSeparator() + "  - " + itemDAO.read(id).getName();
+			itemString = itemString + System.lineSeparator() + "  - " + itemDAO.read(id).getName() + "  Id: " + id;
 		}
 		} else {
 			itemString = System.lineSeparator() + "  No items in this order";
@@ -80,8 +80,8 @@ public class Order {
 	public String toString() {
 		CustomerDAO customerDAO = new CustomerDAO();
 		OrderDAO orderDAO = new OrderDAO();
-		return "order id:" + id + " customer name:" + customerDAO.read(customerId).getFirstName() + " "
-				+ customerDAO.read(customerId).getSurname() + " items:" + itemsToString(itemId) + "total cost:" + orderDAO.calculateCost(id);
+		return "Order id: " + id + "  Customer name: " + customerDAO.read(customerId).getFirstName() + " "
+				+ customerDAO.read(customerId).getSurname() + "  Customer id: " + customerId + "  Items: " + itemsToString(itemId) + "Total cost: " + orderDAO.calculateCost(id) + System.lineSeparator();
 	}
 
 	@Override
