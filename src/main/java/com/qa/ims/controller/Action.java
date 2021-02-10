@@ -27,7 +27,7 @@ public enum Action {
 	 * Describes the action
 	 */
 	public String getDescription() {
-		return this.name() + ": " + this.description;
+		return "    " + this.name() + ":  " + this.description;
 	}
 
 	/**
@@ -50,6 +50,7 @@ public enum Action {
 		do {
 			try {
 				action = Action.valueOf(utils.getString().toUpperCase());
+				LOGGER.info(System.lineSeparator());
 			} catch (IllegalArgumentException e) {
 				LOGGER.error("Invalid selection please try again");
 			}

@@ -20,7 +20,7 @@ public class DomainTest {
 	public void testGetDescription() {
 		Domain domain = Domain.CUSTOMER;
 		
-		assertEquals("CUSTOMER: Information about customers", domain.getDescription());
+		assertEquals("    CUSTOMER:  Information about customers", domain.getDescription());
 	}
 	
 	@Test

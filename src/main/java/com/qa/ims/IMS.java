@@ -56,8 +56,6 @@ public class IMS {
 	private void domainAction(Domain domain) {
 		boolean changeDomain = false;
 		do {
-			
-			LOGGER.info("in it again");
 
 			CrudController<?> active = null;
 			switch (domain) {
@@ -89,8 +87,6 @@ public class IMS {
 				doAction(active, action);
 				utils.isContinue();
 			}
-			
-			LOGGER.info("im out of it");
 			
 		} while (!changeDomain);
 	}

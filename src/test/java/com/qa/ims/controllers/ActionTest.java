@@ -21,7 +21,7 @@ public class ActionTest {
 	public void testGetDescription() {
 		Action action = Action.UPDATE;
 		
-		assertEquals("UPDATE: To change an entity already in the database", action.getDescription());
+		assertEquals("    UPDATE:  To change an entity already in the database", action.getDescription());
 	}
 	
 	@Test
