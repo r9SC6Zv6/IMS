@@ -19,7 +19,7 @@ public enum Domain {
 	}
 
 	public String getDescription() {
-		return this.name() + ": " + this.description;
+		return "    " + this.name() + ":  " + this.description;
 	}
 
 	public static void printDomains() {
@@ -33,6 +33,7 @@ public enum Domain {
 		while (true) {
 			try {
 				domain = Domain.valueOf(utils.getString().toUpperCase());
+				LOGGER.info(System.lineSeparator());
 				break;
 			} catch (IllegalArgumentException e) {
 				LOGGER.error("Invalid selection please try again");
