@@ -1,5 +1,6 @@
 package com.qa.ims.utils;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -8,7 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class Utils {
-	
+
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	private final Scanner scanner;
@@ -20,6 +21,11 @@ public class Utils {
 
 	public Utils() {
 		scanner = new Scanner(System.in);
+	}
+	
+	public void isContinue() {
+		LOGGER.info(System.lineSeparator() + "Press ENTER to continue");
+		scanner.nextLine();
 	}
 
 	public Long getLong() {
@@ -53,7 +59,7 @@ public class Utils {
 		} while (doubleInput == null);
 		return doubleInput;
 	}
-	
+
 	public List<Long> getLongList() {
 		String input = null;
 		List<Long> listInput = new ArrayList<>();
@@ -69,6 +75,20 @@ public class Utils {
 			}
 		} while (listInput.isEmpty());
 		return listInput;
+	}
+
+	public void clear() {
+		try {
+			if (System.getProperty("os.name").contains("Windows")) {
+				new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+			} else {
+				Runtime.getRuntime().exec("clear");
+				System.out.print("\033[H\033[2J");  
+				System.out.flush();
+			}
+			LOGGER.info("Welcome to the Inventory Management System!" + System.lineSeparator());
+		} catch (IOException | InterruptedException ex) {
+		}
 	}
 
 }

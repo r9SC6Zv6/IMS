@@ -35,7 +35,8 @@ public class IMS {
 	}
 
 	public void imsSystem() {
-		LOGGER.info("Welcome to the Inventory Management System!");
+		utils.clear();
+		
 		DBUtils.connect();
 
 		Domain domain = null;
@@ -46,6 +47,8 @@ public class IMS {
 			domain = Domain.getDomain(utils);
 
 			domainAction(domain);
+			
+			utils.clear();
 
 		} while (domain != Domain.STOP);
 	}
@@ -53,6 +56,8 @@ public class IMS {
 	private void domainAction(Domain domain) {
 		boolean changeDomain = false;
 		do {
+			
+			LOGGER.info("in it again");
 
 			CrudController<?> active = null;
 			switch (domain) {
@@ -70,6 +75,8 @@ public class IMS {
 			default:
 				break;
 			}
+			
+			utils.clear();
 
 			LOGGER.info(() ->"What would you like to do with " + domain.name().toLowerCase() + ":");
 
@@ -80,7 +87,11 @@ public class IMS {
 				changeDomain = true;
 			} else {
 				doAction(active, action);
+				utils.isContinue();
 			}
+			
+			LOGGER.info("im out of it");
+			
 		} while (!changeDomain);
 	}
 
