@@ -24,11 +24,6 @@ public class DomainTest {
 	}
 	
 	@Test
-	public void testPrintDomains() {
-		Domain.printDomains();
-	}
-	
-	@Test
 	public void testGetDomain() {
 		final String DOMAIN = "customer";
 		final Domain got = Domain.CUSTOMER;
