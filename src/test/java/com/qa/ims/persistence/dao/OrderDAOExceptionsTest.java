@@ -92,15 +92,6 @@ public class OrderDAOExceptionsTest {
 		final Order updated = new Order(1L, 1L, itemId);
 		assertEquals(updated, DAO.update(updater));
 	}
-	
-	@Test
-	public void testUpdateException() {
-		final List<Long> itemId = new ArrayList<>();
-		itemId.add(1L);
-		itemId.add(1L);
-		final Order updater = new Order("ERROR", 1L, itemId);
-		DAO.update(updater);
-	}
 
 	@Test
 	public void testDelete() {

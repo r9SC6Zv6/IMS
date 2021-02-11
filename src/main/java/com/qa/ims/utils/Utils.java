@@ -24,7 +24,8 @@ public class Utils {
 	}
 	
 	public void isContinue() {
-		LOGGER.info(System.lineSeparator() + "Press ENTER to continue");
+		String message = System.lineSeparator() + "Press ENTER to continue";
+		LOGGER.info(message);
 		scanner.nextLine();
 	}
 
@@ -83,10 +84,11 @@ public class Utils {
 				new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
 			} else {
 				Runtime.getRuntime().exec("clear");
-				System.out.print("\033[H\033[2J");  
-				System.out.flush();
+				LOGGER.info("\033[H\033[2J");  
+
 			}
-			LOGGER.info("Welcome to the Inventory Management System!" + System.lineSeparator());
+			String message = "Welcome to the Inventory Management System!" + System.lineSeparator();
+			LOGGER.info(message);
 		} catch (IOException | InterruptedException ex) {
 			Thread.currentThread().interrupt();
 		}
