@@ -88,6 +88,7 @@ public class Utils {
 			}
 			LOGGER.info("Welcome to the Inventory Management System!" + System.lineSeparator());
 		} catch (IOException | InterruptedException ex) {
+			Thread.currentThread().interrupt();
 		}
 	}
 

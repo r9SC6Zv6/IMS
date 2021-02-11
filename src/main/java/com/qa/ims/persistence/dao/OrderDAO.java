@@ -50,7 +50,7 @@ public class OrderDAO implements Dao<Order> {
 			Long currentOrderId = orders.get(0).getId();
 			int i = 1;
 			while (i < orders.size()) {
-				if (orders.get(i).getId() == currentOrderId) {
+				if (orders.get(i).getId().equals(currentOrderId)) {
 					orders.get(i - 1).getItemId().add(orders.get(i).getItemId().get(0));
 					orders.remove(i);
 				} else {
@@ -78,7 +78,7 @@ public class OrderDAO implements Dao<Order> {
 			Long currentOrderId = orders.get(0).getId();
 			int i = 1;
 			while (i < orders.size()) {
-				if (orders.get(i).getId() == currentOrderId) {
+				if (orders.get(i).getId().equals(currentOrderId)) {
 					orders.get(i - 1).getItemId().add(orders.get(i).getItemId().get(0));
 					orders.remove(i);
 				} else {
@@ -149,7 +149,7 @@ public class OrderDAO implements Dao<Order> {
 				Long currentOrderId = orders.get(0).getId();
 				int i = 1;
 				while (i < orders.size()) {
-					if (orders.get(i).getId() == currentOrderId) {
+					if (orders.get(i).getId().equals(currentOrderId)) {
 						orders.get(i - 1).getItemId().add(orders.get(i).getItemId().get(0));
 						orders.remove(i);
 					} else {
@@ -185,7 +185,7 @@ public class OrderDAO implements Dao<Order> {
 			LOGGER.debug(e);
 			LOGGER.error(e.getMessage());
 		}
-		return null;
+		return new ArrayList<>();
 	}
 	
 	public List<Long> readByItem(Long itemId) {
@@ -204,7 +204,7 @@ public class OrderDAO implements Dao<Order> {
 			LOGGER.debug(e);
 			LOGGER.error(e.getMessage());
 		}
-		return null;
+		return new ArrayList<>();
 	}
 
 	/**

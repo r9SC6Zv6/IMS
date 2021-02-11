@@ -60,8 +60,8 @@ public class OrderController implements CrudController<Order> {
 		LOGGER.info("Please enter the id of the order you would like to update");
 		Long id = utils.getLong();
 		LOGGER.info("How would you like to update the order");
-		LOGGER.info("ADD: To add items to the order");
-		LOGGER.info("REMOVE: To remove items from the order");
+		LOGGER.info("    ADD: To add items to the order");
+		LOGGER.info("    REMOVE: To remove items from the order");
 		String update = utils.getString().toUpperCase();
 		LOGGER.info("Please enter item ids separated by space");
 		List<Long> itemId = utils.getLongList();
