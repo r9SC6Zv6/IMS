@@ -1,19 +1,30 @@
-Coverage: 34%
-# Project Title
+Coverage: 86.8%
+# Inventory Management System: IMS Project
 
-One Paragraph of project description goes here
+A command line inventory management system written in Java as part of the Fundamentals Project at QA Academy.  
+A very simple system designed for an imaginary warship model making shop with basic functions for record keeping and cost calculations. The user is a very old fashioned gent who prefers not having any fancy GUI and likes working in a command line tool instead even though he's typing with two fingers and takes a few moment to find each key (quite the opposite of Sophisticated Sara if you watched The Apprentice).
 
-## Getting Started
+The system connects with a MySQL database and implements CRUD functionality on 3 domains. That is it can CREATE, READ, UPDATE and DELETE entries from either CUSTOMER, ITEM or ORDER tables of a database. 
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+## Further development and customisation
+
+These instructions will get you a copy of the project up and running on your local machine for further development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
+The system is written in Java and therefore needs the Java SE JDK installed which you can get instructions for from [here](https://www.oracle.com/java/technologies/javase/jdk14-archive-downloads.html).  
+Verify the installation and version using the following command:
+```
+java -version
+```
 
+Maven was used to build the project which you can get from [here](https://maven.apache.org).  
+Verify the installation and version using the following command:
 ```
-Give examples
+mvn -version
 ```
+
+Any text editor can be used to write and modify code but an IDE is very usefull for Java.  
 
 ### Installing
 
@@ -62,7 +73,17 @@ Give an example
 
 ## Deployment
 
-Add additional notes about how to deploy this on a live system
+Google Cloud service account credential file needs to be added to Environment variables for authentication otherwise connection to GCP database is not possible.
+
+Make sure Java is instaled but running:
+```
+java -version
+```
+
+To run the application, navigate to the root directory of the project and use the following command:
+```
+java -jar ims.jar
+```
 
 ## Built With
 
@@ -74,16 +95,15 @@ We use [SemVer](http://semver.org/) for versioning.
 
 ## Authors
 
+* **Ervin Musincki** - *Final impletementation* [r9SC6Zv6](https://github.com/r9SC6Zv6)
+* **J Harry** - *Distributing a starter version* [JHarry444](https://github.com/JHarry444)
 * **Chris Perrins** - *Initial work* - [christophperrins](https://github.com/christophperrins)
 
 ## License
 
 This project is licensed under the MIT license - see the [LICENSE.md](LICENSE.md) file for details 
 
-*For help in [Choosing a license](https://choosealicense.com/)*
-
 ## Acknowledgments
 
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
+* I thank [christophperrins](https://github.com/christophperrins) and [JHarry444](https://github.com/JHarry444) for the initial work.
+* I also thank my trainers at QA for making this possible.
