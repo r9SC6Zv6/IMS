@@ -30,19 +30,18 @@ Any text editor can be used to write and modify code but an IDE is very usefull 
 
 A step by step series of examples that tell you how to get a development env running
 
-Say what the step will be
-
+Click on the green `Code` button at the top of the page and follow the instructions to clone the repository onto your local machine or use the following command to use git from a command line (must have git installed):
 ```
-Give the example
-```
-
-And repeat
-
-```
-until finished
+git clone https://github.com/r9SC6Zv6/IMS
 ```
 
-End with an example of getting some data out of the system or using it for a little demo
+Create a local or remote MySQL server and enter the url and credentials into the db.properties file at `src/main/resources/db.properties` following the template in the db-deffault.properties file.
+
+The database can be setup according to the scema found at `src/main/resources/sql-schema.sql`.
+
+Then open your pregered IDE and import the project by selecting the root folder.
+
+Now, the project can be run by opening the `Runner.java` class, right clicking and selecting Run (In Eclipse anyway).
 
 ## Running the tests
 
