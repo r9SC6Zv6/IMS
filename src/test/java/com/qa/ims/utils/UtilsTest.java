@@ -105,4 +105,5 @@ public class UtilsTest {
 
 		assertEquals(RETURNED, utils.getLongList());
 	}
+	
 }

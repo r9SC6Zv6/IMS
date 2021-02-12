@@ -60,13 +60,13 @@ public class OrderDAOExceptionsTest {
 	@Test
 	public void testReadByCustomer() {
 		final long ID = 1L;
-		assertEquals(null, DAO.readByCustomer(ID));
+		assertEquals(new ArrayList<>(), DAO.readByCustomer(ID));
 	}
 	
 	@Test
 	public void testReadByItem() {
 		final long ID = 1L;
-		assertEquals(null, DAO.readByItem(ID));
+		assertEquals(new ArrayList<>(), DAO.readByItem(ID));
 	}
 
 	@Test(expected = NullPointerException.class)
@@ -91,15 +91,6 @@ public class OrderDAOExceptionsTest {
 		itemId.remove(0);
 		final Order updated = new Order(1L, 1L, itemId);
 		assertEquals(updated, DAO.update(updater));
-	}
-	
-	@Test
-	public void testUpdateException() {
-		final List<Long> itemId = new ArrayList<>();
-		itemId.add(1L);
-		itemId.add(1L);
-		final Order updater = new Order("ERROR", 1L, itemId);
-		DAO.update(updater);
 	}
 
 	@Test

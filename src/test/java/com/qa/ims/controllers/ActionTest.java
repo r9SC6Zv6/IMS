@@ -25,11 +25,6 @@ public class ActionTest {
 	}
 	
 	@Test
-	public void testPrintAction() {
-		Action.printActions();
-	}
-	
-	@Test
 	public void testGetAction() {
 		final String ACTION = "read";
 		final Action got = Action.READ;
