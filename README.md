@@ -43,32 +43,23 @@ Then open your pregered IDE and import the project by selecting the root folder.
 
 Now, the project can be run by opening the `Runner.java` class, right clicking and selecting Run (In Eclipse anyway).
 
+## Limitations
+
+The current ims.jar file only functions correclty if the Google Cloud service account credentials file is present on the local computer with the `GOOGLE_APPLICATION_CREDENTIALS=path_to_file/credentials.json` added to Environment Varibales. To use with different database please enter credentials into a db.properties file at `src/main/resources/`  and re-package.
 ## Running the tests
 
-Explain how to run the automated tests for this system. Break down into which tests and what they do
+The project has been Unit Tested using JUnit and Coding Style/ Quality Tested using SonarQube.  
 
 ### Unit Tests 
 
-Explain what these tests test, why and how to run them
+Unit Tests have been used to test the indepenedent funcion and behaviour of isolated 'units' of code.  
+The tests can be run in Eclipse by right clicking on the `src/test/java` directory and selecting `Run as > JUnit Test`.
 
-```
-Give an example
-```
+### Coding style tests
 
-### Integration Tests 
-Explain what these tests test, why and how to run them
-
-```
-Give an example
-```
-
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
+SonarQube has been used for coding style tests to check for volnurabilitis, maintinablility and to see how well best practices have been followed.  
+To run the tests install SonarQube by following the instructions [here](https://www.sonarqube.org/downloads/). Then run the given command in your favourite terminal emulator from the root folder of the project.  
+The results will be available from the SonarQube web interface at `http://localhost:9000`
 
 ## Deployment
 
