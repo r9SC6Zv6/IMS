@@ -101,6 +101,8 @@ public class OrderDAOTest {
 		final List<Long> itemId = new ArrayList<>();
 		itemId.add(1L);
 		itemId.add(1L);
+		final Order error = new Order("ERROR", 1L, itemId);
+		DAO.update(error);
 		final Order updater = new Order("REMOVE", 1L, itemId);
 		itemId.remove(0);
 		final Order updated = new Order(1L, 1L, itemId);

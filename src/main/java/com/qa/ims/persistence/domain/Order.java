@@ -64,16 +64,16 @@ public class Order {
 
 	private String itemsToString(List<Long> itemId) {
 		ItemDAO itemDAO = new ItemDAO();
-		String itemString = "";
+		StringBuilder itemString = new StringBuilder();
 		if (!itemId.isEmpty()) {
-		for (Long id : itemId) {
-			itemString = itemString + System.lineSeparator() + "  - " + itemDAO.read(id).getName() + "  Id: " + id;
+		for (Long l : itemId) {
+			itemString.append(System.lineSeparator() + "  - " + itemDAO.read(l).getName() + "  Id: " + l);
 		}
 		} else {
-			itemString = System.lineSeparator() + "  No items in this order";
+			itemString.append(System.lineSeparator() + "  No items in this order");
 		}
-		itemString = itemString + System.lineSeparator();
-		return itemString;
+		itemString.append(System.lineSeparator());
+		return itemString.toString();
 	}
 
 	@Override
